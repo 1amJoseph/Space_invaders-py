@@ -11,18 +11,18 @@ print(os.getcwd())  # Muestra el directorio de trabajo actual
 
 class Game:
     def __init__(self):
-        #player
+        #player setup
         player_sprite = Player((screen_width / 2,screen_height),screen_width,5)
         self.player = pygame.sprite.GroupSingle(player_sprite)
 
-        #health and score
+        #Health and score setup
         self.lives = 3
         self.live_surf = pygame.image.load('assets/jugador.png').convert_alpha()
         self.live_x_start_pos = screen_width - (self.live_surf.get_size()[0] * 2 + 20)
         self.score = 0
         self.font = pygame.font.Font('font/Pixeled.ttf', 20)
 
-        #obstacle
+        #obstacle from the game
         self.shape = obstacle.shape
         self.block_size = 6
         self.blocks = pygame.sprite.Group()
@@ -30,17 +30,17 @@ class Game:
         self.obstacle_x_positions = [num * (screen_width / self.obstacle_amount) for num in range(self.obstacle_amount)]
         self.create_multiple_obstacle(*self.obstacle_x_positions, x_start = screen_width / 15, y_start = 480)
 
-        #alien
+        #alien setup
         self.aliens = pygame.sprite.Group()
         self.alien_lasers = pygame.sprite.Group()
         self.alien_setup(rows = 6, cols = 8)
         self.alien_direction = 1
 
-        #extra
+        #extra alien setup
         self.extra = pygame.sprite.GroupSingle()
         self.extra_spawn_time = randint(400,800)
 
-        #audio
+        #audio setup
         music = pygame.mixer.Sound('audio/music.wav')
         music.set_volume(0.2)
         music.play(loops = -1)
@@ -130,7 +130,8 @@ class Game:
                 #obstacle collision
                 if pygame.sprite.spritecollide(laser, self.blocks, True):
                     laser.kill()
-
+                
+                #less lives
                 if pygame.sprite.spritecollide(laser, self.player, False):
                     laser.kill()
                     self.lives -= 1
@@ -164,6 +165,7 @@ class Game:
             screen.blit(victory_surf, victory_rect)
 
     def run(self):
+        #events update
         self.player.update()
         self.extra.update()
         self.alien_lasers.update()
@@ -207,6 +209,9 @@ if __name__ == '__main__':
     screen_width = 600
     screen_height = 600
     screen = pygame.display.set_mode((screen_width, screen_height))
+    pygame.display.set_caption('Space Invaders - alpha 0.0.1')
+    icon = pygame.image.load('assets/icon.png')
+    pygame.display.set_icon(icon)
     clock = pygame.time.Clock()
     game = Game()
     running = True
@@ -222,9 +227,11 @@ if __name__ == '__main__':
             if event.type == AlienLaser:
                 game.alien_shoot()
         
+        #gamezone setup
         screen.fill((30,30,30))
         game.run()
         crt.draw()
 
+        #refresh rate
         pygame.display.flip()
         clock.tick(60)
