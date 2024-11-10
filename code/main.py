@@ -8,6 +8,7 @@ from random import choice, randint
 from laser import Laser
 
 print(os.getcwd())  # Muestra el directorio de trabajo actual
+print("The game is starting...");
 
 class Game:
     def __init__(self):
